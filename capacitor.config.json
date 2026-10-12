@@ -1,6 +1,5 @@
 {
   "appId": "com.busy.marketreceipt",
   "appName": "BusyReceipt",
-  "webDir": ".",
-  "bundledWebRuntime": false
+  "webDir": "www"
 }
