@@ -3,45 +3,41 @@ name: Build Android APK
 on:
   push:
     branches: [ "main", "master" ]
-  workflow_dispatch: # मैन्युअल रूप से बटन दबाकर चलाने के लिए
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. कोड चेकआउट करें
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Node.js इनस्टॉल करें
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # 3. Java 17 सेटअप करें (Android बिल्ड के लिए आवश्यक)
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      # 4. डिपेंडेंसी और Capacitor इनस्टॉल करें
-      - name: Install Dependencies
+      - name: Prepare Web Directory and Dependencies
         run: |
+          mkdir -p www
+          cp index.html www/
           npm install
           npx cap add android
           npx cap copy android
 
-      # 5. Gradle से APK कंपाइल करें
       - name: Build Android Debug APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      # 6. बनी हुई APK को डाउनलोड के लिए सेव करें
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
